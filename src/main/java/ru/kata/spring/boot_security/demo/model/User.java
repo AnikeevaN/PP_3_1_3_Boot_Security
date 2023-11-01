@@ -38,7 +38,6 @@ public class User implements UserDetails {
     @Column(name = "phone")
     private Integer phone;
 
-
     @NotEmpty
     @Column(name = "password")
     private String password;
@@ -47,19 +46,6 @@ public class User implements UserDetails {
     private Set<Role> roles;
 
     public User() {
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return id.equals(user.id) && name.equals(user.name) && Objects.equals(lastName, user.lastName) && Objects.equals(age, user.age) && Objects.equals(phone, user.phone) && password.equals(user.password);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, lastName, age, phone, password);
     }
 
     public User(String name, String lastName, Integer age, Integer phone, String password, Set<Role> roles) {
@@ -111,6 +97,11 @@ public class User implements UserDetails {
         this.phone = phone;
     }
 
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
@@ -119,14 +110,13 @@ public class User implements UserDetails {
         return roles;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getRoles();
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     @Override
-    public String getPassword() {
-        return password;
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return getRoles();
     }
 
     @Override
@@ -154,7 +144,16 @@ public class User implements UserDetails {
         return true;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id.equals(user.id) && name.equals(user.name) && Objects.equals(lastName, user.lastName) && Objects.equals(age, user.age) && Objects.equals(phone, user.phone) && password.equals(user.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, lastName, age, phone, password);
     }
 }
